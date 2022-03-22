@@ -1,0 +1,14 @@
+version: '3'
+services:
+   db:
+      image: mysql:8.0.26
+      container_name: admin-sso-mysql
+      restart: always
+      ports:
+        - 13306:3306
+      environment:
+          MYSQL_DATABASE: AdminSSO
+          MYSQL_ROOT_PASSWORD: adminsso
+      volumes:
+         - ./mysql/conf:/etc/mysql/conf.d
+         - ./mysql/data:/var/lib/mysql

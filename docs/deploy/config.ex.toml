@@ -1,0 +1,36 @@
+title = "local config"
+
+[db]
+
+host = '127.0.0.1'
+port = 13306
+database = "AdminSSO"
+user = "root"
+pwd = "adminsso"
+
+
+[app]
+
+title =  "FastAPI"
+description = "This is the Demo"
+version = "1.0.1"
+
+[app.contact]
+name = "Sk"
+email = "ldu_sunkaixuan@163.com"
+
+[app.license_info]
+name = "Apache 2.0"
+url = "https://www.apache.org/licenses/LICENSE-2.0.html"
+
+
+[log]
+
+logpath = ""
+level = "DEBUG"
+
+[jwt]
+
+secret_key = "23bec386829bd6688b9940534113db03592ed7e5f70aa3a509a5a1d3f135a1e9"
+algorithm = "HS256"
+token_expires_m = 30

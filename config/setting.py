@@ -76,7 +76,7 @@ class TortoiseORMSetting(BaseModel):
              'models': {
                 'models': [
                     'aerich.models',
-                    # 'apps.models.models'
+                    'apps.models.models'
                 ],
                 'default_connection': 'default',
             }
