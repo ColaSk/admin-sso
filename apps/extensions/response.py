@@ -4,10 +4,14 @@ from pydantic import BaseModel
 class BaseResponse(BaseModel):
     success: bool = True
     code: int = 200
-    massage: str = None
+    massage: Any = None
     data: Any = None
 
 
 class NormalResponse(BaseResponse):
     data: Optional[str] = 'success'
 
+
+class ErrorResponse(BaseResponse):
+    success: bool = False
+    code: int = 500
