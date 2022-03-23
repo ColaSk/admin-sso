@@ -47,7 +47,7 @@ class CurrUser(object):
             raise NotFound(detail=f"not find id: {userdata.get('id')} user")
     
     @classmethod
-    async def login(cls, username: str, password: str)-> Tuple[str, dict]:
+    async def login(cls, username: str, password: str)-> Tuple[str, User]:
 
         user = await User.get_or_none(name=username, is_del=False)
 
@@ -61,4 +61,4 @@ class CurrUser(object):
 
         token = create_token(userdata)
 
-        return token, userdata
+        return token, user
