@@ -1,17 +1,29 @@
 from typing import Any, Optional
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from apps.extensions.route import LoggingRoute
-from .schemas import UserCreate, NormalResponse, CreateResponse, UsersListResponse
+from apps.modules.user import CurrUser
+
+from .schemas import (
+    UserCreate, NormalResponse, CreateResponse, UsersListResponse,
+    SuccessResponse
+)
 from .services import UserOperator
 
 router = APIRouter(route_class=LoggingRoute)
 
 
-@router.post('/login',response_model=NormalResponse ,status_code=200)
-def login():
-    """登录 TODO: 待实现"""
-    return NormalResponse()
+@router.post('/login',response_model=SuccessResponse ,status_code=200)
+async def login(form: OAuth2PasswordRequestForm = Depends()):
+    """登录"""
+    token, userdata = await UserOperator.login(form)
+    result = {'token': token, 'user': userdata}
+    return SuccessResponse(data=result)
+
+@router.get('/user',response_model=SuccessResponse , status_code=200)
+async def curr_user(user: CurrUser = Depends(UserOperator.curr_user)):
+    return SuccessResponse(data=user.to_dict(('id', 'name', 'created_time')))
 
 @router.post('/', response_model=CreateResponse, status_code=200)
 async def add_user(body: UserCreate):

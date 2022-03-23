@@ -12,6 +12,9 @@ class NormalResponse(BaseResponse):
     data: Optional[str] = 'success'
 
 
+class SuccessResponse(BaseResponse): ...
+
+
 class ErrorResponse(BaseResponse):
     success: bool = False
     code: int = 500

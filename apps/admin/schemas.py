@@ -1,6 +1,6 @@
 from typing import Any, List
 from datetime import datetime
-from apps.extensions.response import BaseResponse, NormalResponse
+from apps.extensions.response import BaseResponse, NormalResponse,SuccessResponse
 from pydantic import BaseModel
 
 class User(BaseModel):
@@ -12,6 +12,11 @@ class User(BaseModel):
 
 class UsersListResponse(BaseResponse):
     data: List[User]
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 
 class UserCreate(BaseModel):
