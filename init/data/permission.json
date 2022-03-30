@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "add",
+        "desc": "测试权限1"
+    },
+    {
+        "id": 2,
+        "name": "delete",
+        "desc": "测试权限2"
+    },
+    {
+        "id": 3,
+        "name": "select",
+        "desc": "测试权限3"
+    },
+    {
+        "id": 4,
+        "name": "update",
+        "desc": "测试权限4"
+    }
+]

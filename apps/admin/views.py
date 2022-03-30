@@ -1,8 +1,7 @@
-from typing import Any, Optional
+import os
 from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from tortoise.transactions import atomic
 from apps.extensions.route import LoggingRoute
-from apps.modules.user import CurrUser
 from apps.models.models import User
 from .depends import login as login_depend, curr_user_info, create_user
 from .schemas import (
@@ -10,8 +9,21 @@ from .schemas import (
     SuccessResponse, UserInfoReResponse, LoginResponse
 )
 from .services import UserOperator
+from init.init import init as datainit
+from config.setting import BASE_DIR
 
 router = APIRouter(route_class=LoggingRoute)
+
+
+@router.post('/init',response_model=NormalResponse , status_code=200)
+@atomic()
+async def init():
+    """模块用户权限表初始化
+    # 初始化权限，角色，初级用户
+    TODO: 后续迁移到指令集初始化
+    """
+    await datainit()
+    return NormalResponse()
 
 
 @router.post('/login',response_model=LoginResponse ,status_code=200)

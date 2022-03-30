@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "test1",
+        "password": "123456",
+        "email": "test1@123.com",
+        "phone": "12345678911",
+        "roles": 1
+    },
+    {
+        "id": 2,
+        "name": "test2",
+        "password": "123456",
+        "email": "test2@123.com",
+        "phone": "12345678912",
+        "roles": 2
+    },
+    {
+        "id": 3,
+        "name": "test3",
+        "password": "123456",
+        "email": "test3@123.com",
+        "phone": "12345678913",
+        "roles": 3
+    }
+]

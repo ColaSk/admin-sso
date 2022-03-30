@@ -1,6 +1,7 @@
 from tortoise.models import Model
 from tortoise import fields
 from passlib.context import CryptContext
+from typing import Any
 from .mixin import ModelBase, DelModelBase, TimeModelBase, ModelMixin
 
 class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
@@ -9,6 +10,11 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
     pwd = fields.CharField(max_length=255, null=False, description='password hash')
     phone = fields.CharField(max_length=255, null=False, unique=True, description='phone')
     email = fields.CharField(max_length=255, description='email')
+    roles = fields.ManyToManyField('models.Role', related_name='users', through='user_role', n_delete=fields.SET_NULL)
+
+    def __init__(self, **kwargs: Any) -> None:
+        kwargs['pwd'] = self.pwdcontext.hash(kwargs['pwd']) # 将 password 转为 hash
+        super().__init__( **kwargs)
 
     class Meta:
         table = 'users'
@@ -16,6 +22,7 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
 
     @property
     def pwdcontext(self):
+        # TODO: context 抽离
         return CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @property
@@ -34,6 +41,7 @@ class Role(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
     
     name = fields.CharField(max_length=255, null=False, description='name')
     desc = fields.TextField(description='desc')
+    permissions = fields.ManyToManyField('models.Permission', related_name='roles', through='role_permission', on_delete=fields.SET_NULL)
 
     class Meta:
         table = 'roles'
