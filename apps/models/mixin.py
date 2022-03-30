@@ -5,13 +5,27 @@ from typing import Union
 
 MODEL_TIME_FORMART = '%Y-%m-%d %H:%M:%S'
 
-
 class ModelBase(Model):
 
-    id = fields.IntField(pk=True, description='主键') # 32bit
+    id = fields.IntField(pk=True, description='主键')
+
+    class Meta:
+        abstract = True
+        table_description = 'base model'
+
+
+class DelModelBase(Model):
+
+    is_del = fields.BooleanField(null=False, default=False, description='逻辑删除')
+
+    class Meta:
+        abstract = True
+        table_description = 'base model'
+
+class TimeModelBase(Model):
+
     created = fields.DatetimeField(auto_now_add=True, null=False, description='创建时间')
     updated = fields.DatetimeField(auto_now=True, null=False, description='更新时间')
-    is_del = fields.BooleanField(null=False, default=False, description='逻辑删除')
 
     @property
     def created_time(self):
@@ -23,6 +37,7 @@ class ModelBase(Model):
 
     class Meta:
         abstract = True
+        table_description = 'base model'
 
 
 class ModelMixin(object): 
