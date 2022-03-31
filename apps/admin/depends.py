@@ -20,7 +20,9 @@ from fastapi import Depends
 oauth2_scheme = OAuth2PasswordBearer('/api/v2/users/login')
 
 async def login(
-    user: OAuth2PasswordRequestForm = Depends()) -> Dict[str, Union[str, User]]:
+    user: OAuth2PasswordRequestForm = Depends()
+) -> Dict[str, Union[str, User]]:
+
     token, userobj = await CurrUser.login(user.username, user.password)
     return {
         'token': token, 
@@ -42,7 +44,10 @@ async def create_user(
     body: UserCreate, 
     curr_user: CurrUser = Depends(curr_user))-> User:
 
-    user = User(name=body.username)
-    user.password = body.password # 密码哈希
+    user = User(
+        name=body.username,
+        pwd=body.password
+    )
     await user.save()
+
     return user

@@ -3,6 +3,7 @@ from tortoise import fields
 from passlib.context import CryptContext
 from typing import Any
 from .mixin import ModelBase, DelModelBase, TimeModelBase, ModelMixin
+from apps.utils.passlib_context import hash, verify
 
 class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
 
@@ -13,7 +14,7 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
     roles = fields.ManyToManyField('models.Role', related_name='users', through='user_role', n_delete=fields.SET_NULL)
 
     def __init__(self, **kwargs: Any) -> None:
-        kwargs['pwd'] = self.pwdcontext.hash(kwargs['pwd']) # 将 password 转为 hash
+        kwargs['pwd'] = hash(kwargs['pwd']) # 将 password 转为 hash
         super().__init__( **kwargs)
 
     class Meta:
@@ -21,20 +22,15 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
         table_description = '用户表'
 
     @property
-    def pwdcontext(self):
-        # TODO: context 抽离
-        return CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-    @property
     def password(self):
         return self.pwd
 
     @password.setter
     def password(self, value):
-        self.pwd = self.pwdcontext.hash(value)
+        self.pwd = hash(value)
 
     def check_password(self, password: str) -> bool:
-        return self.pwdcontext.verify(password, self.password)
+        return verify(password, self.password)
 
 
 class Role(ModelBase, DelModelBase, TimeModelBase, ModelMixin):

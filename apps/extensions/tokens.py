@@ -34,6 +34,7 @@ def create_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
         setting.jwt.secret_key, 
         algorithm=setting.jwt.algorithm)
 
+
 def verify_token(token: str) -> dict:
     """验证token
 

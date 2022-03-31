@@ -10,7 +10,7 @@ from .schemas import (
 )
 from .services import UserOperator
 from init.init import init as datainit
-from config.setting import BASE_DIR
+
 
 router = APIRouter(route_class=LoggingRoute)
 
@@ -36,6 +36,7 @@ async def login(login_info: dict = Depends(login_depend)):
     """
     return LoginResponse(data=login_info)
 
+
 @router.get('/user',response_model=UserInfoReResponse , status_code=200)
 async def curr_user(user: User = Depends(curr_user_info)):
     """获取当前用户信息
@@ -44,6 +45,7 @@ async def curr_user(user: User = Depends(curr_user_info)):
     """
     return UserInfoReResponse(data=user)
 
+
 @router.post('/', response_model=CreateResponse, status_code=200)
 async def add_user(user: User = Depends(create_user)):
     """添加用户
@@ -51,6 +53,7 @@ async def add_user(user: User = Depends(create_user)):
         user User: 添加后的用户对象
     """
     return CreateResponse(data=user)
+
 
 @router.get('/', response_model=UsersListResponse, status_code=200)
 async def get_users():

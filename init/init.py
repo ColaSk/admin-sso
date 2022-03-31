@@ -15,14 +15,7 @@ import os
 from typing import List
 from apps.models.models import User, Role, Permission
 from config.setting import BASE_DIR
-
-# TODO: 转移到utils
-def read_json(filepath: str):
-    """读取接送文件"""
-    with open(filepath, 'r', encoding='utf8') as file:
-        data = json.load(file)
-    return data
-
+from apps.utils.utils import read_json
 
 async def init_users(filepath: str):
     """初始化 用户表"""
