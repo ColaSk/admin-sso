@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-'''
+"""
 @File    :   log.py
 @Time    :   2022/02/10 11:23:16
 @Author  :   sk 
@@ -7,15 +7,16 @@
 @Contact :   ldu_sunkaixuan@163.com
 @License :   (C)Copyright 2017-2018, Liugroup-NLPR-CASIA
 @Desc    :   None
-'''
+"""
 
 # here put the import lib
 
-__all__ = ['logger']
+__all__ = ["logger"]
 
 import sys
 import os
 from loguru import logger
+
 
 def env(key, type_, default=None):
     if key not in os.environ:
@@ -38,20 +39,24 @@ def env(key, type_, default=None):
             return int(val)
         except ValueError:
             raise ValueError(
-                "Invalid environment variable '%s' (expected an integer): '%s'" % (key, val)
+                "Invalid environment variable '%s' (expected an integer): '%s'"
+                % (key, val)
             ) from None
 
-class defaults(object):
 
+class defaults(object):
 
     LOGURU_AUTOINIT = env("LOGURU_AUTOINIT", bool, True)
 
     LOGURU_FORMAT = env(
         "LOGURU_FORMAT",
         str,
-        ("<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
-        "<yellow>{level: <8}</yellow> | "
-        "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>")
+        (
+            "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
+            "<yellow>{level: <8}</yellow> | "
+            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
+            "<level>{message}</level>"
+        ),
     )
     LOGURU_FILTER = env("LOGURU_FILTER", str, None)
     LOGURU_LEVEL = env("LOGURU_LEVEL", str, "DEBUG")
@@ -88,10 +93,14 @@ class defaults(object):
 
     LOGURU_CRITICAL_NO = env("LOGURU_CRITICAL_NO", int, 50)
     LOGURU_CRITICAL_COLOR = env("LOGURU_CRITICAL_COLOR", str, "<RED><bold>")
-    LOGURU_CRITICAL_ICON = env("LOGURU_CRITICAL_ICON", str, "☠️")  # Skull and Crossbones
+    LOGURU_CRITICAL_ICON = env(
+        "LOGURU_CRITICAL_ICON", str, "☠️"
+    )  # Skull and Crossbones
 
-    LOGURU_BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    LOGURU_FILE_PATH  = f"{LOGURU_BASE_DIR}/logs"
+    LOGURU_BASE_DIR = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+    LOGURU_FILE_PATH = f"{LOGURU_BASE_DIR}/logs"
 
 
 log_default_config = {
@@ -101,32 +110,29 @@ log_default_config = {
             "level": defaults.LOGURU_LEVEL,
             "enqueue": True,
             "colorize": True,
-            "format": defaults.LOGURU_FORMAT
+            "format": defaults.LOGURU_FORMAT,
         },
         {
             "sink": f"{defaults.LOGURU_FILE_PATH}/main.log",
             "level": defaults.LOGURU_LEVEL,
-            "encoding":"utf-8",
-            "rotation":"00:00", 
-            "compression":"zip",
-            "backtrace": defaults.LOGURU_BACKTRACE, 
+            "encoding": "utf-8",
+            "rotation": "00:00",
+            "compression": "zip",
+            "backtrace": defaults.LOGURU_BACKTRACE,
             "diagnose": defaults.LOGURU_DIAGNOSE,
             "enqueue": defaults.LOGURU_ENQUEUE,
             "colorize": defaults.LOGURU_COLORIZE,
-            "format": defaults.LOGURU_FORMAT
-        }
-    ], 
-    "levels": None, 
-    "extra": None, 
-    "patcher": None, 
-    "activation": None
-} 
+            "format": defaults.LOGURU_FORMAT,
+        },
+    ],
+    "levels": None,
+    "extra": None,
+    "patcher": None,
+    "activation": None,
+}
 
 
-def to_configure_loguru(
-        logger: logger.__class__, 
-        config: dict = log_default_config
-    ):
+def to_configure_loguru(logger: logger.__class__, config: dict = log_default_config):
     """重新配置logger"""
 
     logger.remove()
@@ -134,6 +140,5 @@ def to_configure_loguru(
 
     return logger
 
+
 logger = to_configure_loguru(logger)
-
-

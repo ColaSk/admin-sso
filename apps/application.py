@@ -6,9 +6,9 @@ from fastapi import FastAPI
 
 app: FastAPI = create_app(
     config=setting.app.dict(),
-    routers={'v2': (admin_router, )}, 
+    routers={"v2": (admin_router,)},
     handlers=exception_handlers,
     # dependencies=dependencies,
     # middlewares=app_middleware,
-    db_config=ORM_LINK_CONF
+    db_config=ORM_LINK_CONF,
 )

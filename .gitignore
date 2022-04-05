@@ -3,3 +3,4 @@ tests
 logs
 config.toml
 docker/mysql/data
+.vscode

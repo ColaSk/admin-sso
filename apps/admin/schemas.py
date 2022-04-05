@@ -1,6 +1,5 @@
-from typing import Any, List
-from datetime import datetime
-from apps.extensions.response import BaseResponse, NormalResponse,SuccessResponse
+from typing import List
+from apps.extensions.response import BaseResponse
 from pydantic import BaseModel
 
 
@@ -29,21 +28,23 @@ class loginResInfo(BaseModel):
     token: str
     user: User
 
+
 class LoginResponse(BaseResponse):
     data: loginResInfo
 
 
 class UserCreate(BaseModel):
+    phone: str
+    email: str
     username: str
     password: str
+
 
 class CreateResponse(BaseResponse):
 
     data: User
 
+
 class UserInfoReResponse(BaseResponse):
 
     data: User
-
-
-

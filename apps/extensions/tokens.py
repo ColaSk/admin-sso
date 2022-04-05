@@ -20,19 +20,13 @@ def create_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta:
         expire = now + expires_delta
     else:
-        expire = now +  timedelta(minutes=30)
+        expire = now + timedelta(minutes=30)
 
-    token_dict = {
-        'exp': expire,
-        'iat': now,
-        'data': data.copy()
-    }
-
+    token_dict = {"exp": expire, "iat": now, "data": data.copy()}
 
     return jwt.encode(
-        token_dict, 
-        setting.jwt.secret_key, 
-        algorithm=setting.jwt.algorithm)
+        token_dict, setting.jwt.secret_key, algorithm=setting.jwt.algorithm
+    )
 
 
 def verify_token(token: str) -> dict:
@@ -46,11 +40,10 @@ def verify_token(token: str) -> dict:
 
     Returns:
         dict: token info
-    """    
+    """
     try:
         return jwt.decode(
-            token, 
-            setting.jwt.secret_key, 
-            algorithms=[setting.jwt.algorithm]) 
+            token, setting.jwt.secret_key, algorithms=[setting.jwt.algorithm]
+        )
     except JWTError as e:
         raise e

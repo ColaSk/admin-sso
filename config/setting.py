@@ -15,8 +15,8 @@ class JWTConfig(BaseModel):
 
 
 class DBConfig(BaseModel):
-    
-    host: Optional[str] = '127.0.0.1'
+
+    host: Optional[str] = "127.0.0.1"
     port: Optional[int] = 3306
     database: str
     user: str
@@ -24,14 +24,14 @@ class DBConfig(BaseModel):
 
 
 class LogConfig(BaseModel):
-    level: str = 'DEBUG'
+    level: str = "DEBUG"
     logfile: Optional[str] = None
 
 
 class AppConfig(BaseModel):
 
-    title: Optional[str] = 'FastAPI'
-    description: Optional[str] = ''
+    title: Optional[str] = "FastAPI"
+    description: Optional[str] = ""
     version: Optional[str] = "1.0.0"
     license_info: Optional[Dict[str, Union[str, Any]]] = {}
     contact: Optional[Dict[str, Union[str, Any]]] = {}
@@ -60,25 +60,22 @@ class TortoiseORMSetting(BaseModel):
                         "database": self.db_config.database,
                         "user": self.db_config.user,
                         "password": self.db_config.pwd,
-                        'charset': 'utf8mb4',
-                    }
+                        "charset": "utf8mb4",
+                    },
                 }
             },
             "apps": apps,
             "use_tz": False,
-            'timezone': 'Asia/Shanghai'
-        } 
-    
+            "timezone": "Asia/Shanghai",
+        }
+
     @property
     def orm_link_config(self) -> dict:
 
         orm_apps_setting = {
-             'models': {
-                'models': [
-                    'aerich.models',
-                    'apps.models.models'
-                ],
-                'default_connection': 'default',
+            "models": {
+                "models": ["aerich.models", "apps.models.models"],
+                "default_connection": "default",
             }
         }
 
@@ -90,5 +87,3 @@ def get_setting(confile: str) -> Setting:
     path = os.path.join(BASE_DIR, confile)
     conf = pytomlpp.load(path)
     return Setting.parse_obj(conf)
-
-

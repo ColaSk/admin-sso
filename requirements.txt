@@ -1,4 +1,5 @@
 fastapi==0.70.1
+pydantic[email]==1.9.0
 uvicorn==0.16.0
 loguru==0.6.0
 tortoise-orm[aiomysql]==0.18.1
@@ -7,3 +8,5 @@ passlib[bcrypt]==1.7.4
 python-jose[cryptography]==3.3.0
 python-multipart==0.0.5
 pytomlpp==1.0.10
+# black==22.3.0
+# flake8==4.0.1
