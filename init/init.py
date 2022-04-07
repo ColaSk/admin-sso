@@ -2,7 +2,7 @@
 """
 @File    :   init.py
 @Time    :   2022/03/30 16:07:36
-@Author  :   KX 
+@Author  :   KX
 @Version :   1.0
 @Contact :   ldu_sunkaixuan.163.com
 @License :   (C)Copyright 2017-2018, Liugroup-NLPR-CASIA
@@ -31,6 +31,11 @@ async def init_users(filepath: str):
             phone=u.get("phone"),
             pwd=u.get("password"),
         )
+        
+        is_admin = u.get("is_admin")
+        if is_admin:
+            user_model.is_admin = is_admin
+
         await user_model.save(force_update=True)
 
         role_ids = u.get("roles")

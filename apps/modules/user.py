@@ -10,10 +10,16 @@
 """
 
 # here put the import lib
-from typing import Tuple
-from apps.extensions.tokens import verify_token, create_token
-from apps.exceptions.exceptions import NotFound
+from typing import Tuple, Union
+
+from apps.exceptions.exceptions import NotFound, Forbidden
+from apps.extensions.tokens import create_token, verify_token
 from apps.models.models import User
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends
+from functools import lru_cache
+
+oauth2_scheme = OAuth2PasswordBearer("/api/v2/users/login")
 
 
 class CurrUser(object):
@@ -24,42 +30,55 @@ class CurrUser(object):
         验证
     """
 
-    def __init__(self, id: int, name: str, userobj: User, **kwargs):
-
-        self.id = id
-        self.name = name
-        self.obj = userobj
+    def __init__(self, model_obj: User):
+        assert model_obj is not None
+        self.obj = model_obj
+            
+    @property
+    def model_obj(self) -> User:
+        return self.obj
+        
+    @property
+    def is_admin(self) -> bool:
+        return self.obj.is_admin
 
     def to_dict(self, selects: tuple = None, excludes: tuple = None) -> dict:
-        return self.obj.to_dict(selects, excludes)
+        return self.model_obj.to_dict(selects, excludes)
 
     @classmethod
-    async def get_obj_by_token(cls, token: str):
-        """通过token获取当前用户对象"""
-
-        tokeninfo = verify_token(token)
-        userdata = tokeninfo.get("data")
-
-        user = await User.get_or_none(id=userdata.get("id"), is_del=False)
-
-        if user:
-            return cls(user.id, user.name, user)
-        else:
-            raise NotFound(detail=f"not find id: {userdata.get('id')} user")
-
+    async def parse_token(cls, token: str):
+        """通过token 获取对象"""
+        parse_token = verify_token(token)
+        userdata = parse_token.get("data")
+        user = await User.get_or_none(id=userdata.get('id'))
+        return cls(user)
+   
     @classmethod
-    async def login(cls, username: str, password: str) -> Tuple[str, User]:
-
-        user = await User.get_or_none(name=username, is_del=False)
+    async def login(cls, username: str, password: str) -> str:
+        """
+        username -> phone
+        password -> pwd
+        """
+        user = await User.get_or_none(phone=username, is_del=False)
 
         if not user:
-            raise NotFound(msg=f" not found username: {username} user")
-
+            raise NotFound(detail=f"not found phone: {username} user")
         if not user.check_password(password):
-            raise Exception("password error")
+            raise Forbidden(detail="password error")
 
-        userdata = user.to_dict(("id", "created_time", "name"))
+        data = user.to_dict(("id", "created_time", "name", "phone"))
+        token = create_token(data)
 
-        token = create_token(userdata)
+        return token
 
-        return token, user
+
+async def curr_user(token: str = Depends(oauth2_scheme)) -> CurrUser:
+    """curr user"""
+    return await CurrUser.parse_token(token)
+
+
+async def admin_user(user: CurrUser = Depends(curr_user)) -> CurrUser:
+    """admin user"""
+    if not user.is_admin:
+        raise Forbidden(detail="Insufficient permissions")
+    return user

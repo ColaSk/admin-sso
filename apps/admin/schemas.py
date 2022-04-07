@@ -26,7 +26,6 @@ class UserLogin(BaseModel):
 
 class loginResInfo(BaseModel):
     token: str
-    user: User
 
 
 class LoginResponse(BaseResponse):

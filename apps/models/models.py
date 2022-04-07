@@ -11,8 +11,11 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
     name = fields.CharField(max_length=255, null=False, description="name")
     pwd = fields.CharField(max_length=255, null=False, description="password hash")
     phone = fields.CharField(
-        max_length=255, null=False, unique=True, description="phone"
-    )
+        max_length=255, null=False, unique=True, description="phone")
+
+    is_admin = fields.BooleanField(
+        default=False, description="Background administrator, only for background module")
+        
     email = fields.CharField(max_length=255, description="email")
     roles = fields.ManyToManyField(
         "models.Role",

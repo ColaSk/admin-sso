@@ -1,22 +1,19 @@
 import os
-from fastapi import APIRouter, Depends
-from tortoise.transactions import atomic
-from apps.extensions.route import LoggingRoute
-from apps.models.models import User
-from .depends import login as login_depend, curr_user_info, create_user
-from .schemas import (
-    UserCreate,
-    CreateResponse,
-    UsersListResponse,
-    UserInfoReResponse,
-    LoginResponse,
-)
 
 from apps.extensions.response import NormalResponse, SuccessResponse
-
-from .services import UserOperator
+from apps.extensions.route import LoggingRoute
+from apps.models.models import User
+from apps.modules.user import CurrUser, admin_user
+from apps.modules.user import curr_user as curruser_dep
+from fastapi import APIRouter, Depends
 from init.init import init as datainit
+from tortoise.transactions import atomic
 
+from .depends import create_user
+from .depends import login as login_depend
+from .schemas import (CreateResponse, LoginResponse, UserCreate,
+                      UserInfoReResponse, UsersListResponse)
+from .services import UserOperator
 
 router = APIRouter(route_class=LoggingRoute)
 
@@ -44,12 +41,12 @@ async def login(login_info: dict = Depends(login_depend)):
 
 
 @router.get("/user", response_model=UserInfoReResponse, status_code=200)
-async def curr_user(user: User = Depends(curr_user_info)):
+async def curr_user(user: CurrUser = Depends(curruser_dep)):
     """获取当前用户信息
     args:
         user User: 获取到的当前用户的对象
     """
-    return UserInfoReResponse(data=user)
+    return UserInfoReResponse(data=user.model_obj)
 
 
 @router.post("/", response_model=CreateResponse, status_code=200)
@@ -62,7 +59,7 @@ async def add_user(user: User = Depends(create_user)):
 
 
 @router.get("/", response_model=UsersListResponse, status_code=200)
-async def get_users():
+async def get_users(admin: CurrUser = Depends(admin_user)):
     """获取用户列表"""
     users = await UserOperator.list()
     return UsersListResponse(data=users)

@@ -40,11 +40,6 @@ class Gone(ExceptionBase):
     DETAIL: Any = "gone"
 
 
-class GoneException(ExceptionBase):
-    STATUS_CODE: int = status.HTTP_410_GONE
-    DETAIL: Any = "gone"
-
-
 class UnprocessableEntity(ExceptionBase):
     STATUS_CODE: int = status.HTTP_422_UNPROCESSABLE_ENTITY
     DETAIL: Any = "unprocessable entity"

@@ -1,10 +1,11 @@
 [
     {
         "id": 1,
-        "name": "test1",
+        "name": "admin",
         "password": "123456",
         "email": "test1@123.com",
         "phone": "12345678911",
+        "is_admin": true,
         "roles": 1
     },
     {

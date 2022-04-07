@@ -20,23 +20,12 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from .schemas import UserCreate, UserLogin
 
 
-oauth2_scheme = OAuth2PasswordBearer("/api/v2/users/login")
-
-
 async def login(
     user: OAuth2PasswordRequestForm = Depends(),
 ) -> Dict[str, Union[str, User]]:
 
-    token, userobj = await CurrUser.login(user.username, user.password)
-    return {"token": token, "user": userobj}
-
-
-async def curr_user(token: str = Depends(oauth2_scheme)) -> CurrUser:
-    return await CurrUser.get_obj_by_token(token)
-
-
-async def curr_user_info(user: CurrUser = Depends(curr_user)) -> User:
-    return user.obj
+    token = await CurrUser.login(user.username, user.password)
+    return {"token": token}
 
 
 async def create_user(body: UserCreate) -> User:
