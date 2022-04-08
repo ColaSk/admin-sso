@@ -10,7 +10,7 @@
 """
 
 # here put the import lib
-from typing import Tuple, Union
+from typing import Tuple, Union, Any
 
 from apps.exceptions.exceptions import NotFound, Forbidden
 from apps.extensions.tokens import create_token, verify_token
@@ -31,7 +31,8 @@ class CurrUser(object):
     """
 
     def __init__(self, model_obj: User):
-        assert model_obj is not None
+        if model_obj is None:
+            raise NotFound(detail="This user does not exist")
         self.obj = model_obj
             
     @property
@@ -50,7 +51,7 @@ class CurrUser(object):
         """通过token 获取对象"""
         parse_token = verify_token(token)
         userdata = parse_token.get("data")
-        user = await User.get_or_none(id=userdata.get('id'))
+        user = await User.get_or_none(id=userdata.get('id'), is_del=False)
         return cls(user)
    
     @classmethod
@@ -70,6 +71,9 @@ class CurrUser(object):
         token = create_token(data)
 
         return token
+    
+    def __getattr__(self, __name: str) -> Any:
+        return getattr(self.model_obj, __name)
 
 
 async def curr_user(token: str = Depends(oauth2_scheme)) -> CurrUser:

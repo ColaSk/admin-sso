@@ -1,4 +1,5 @@
 import os
+from apps.exceptions.status import status
 
 from apps.extensions.response import NormalResponse, SuccessResponse
 from apps.extensions.route import LoggingRoute
@@ -9,9 +10,9 @@ from fastapi import APIRouter, Depends
 from init.init import init as datainit
 from tortoise.transactions import atomic
 
-from .depends import create_user
+from .depends import create_user, delete_user_dep
 from .depends import login as login_depend
-from .schemas import (CreateResponse, LoginResponse, UserCreate,
+from .schemas import (CreateResponse, LoginResponse,
                       UserInfoReResponse, UsersListResponse)
 from .services import UserOperator
 
@@ -58,8 +59,15 @@ async def add_user(user: User = Depends(create_user)):
     return CreateResponse(data=user)
 
 
+@router.delete('/{id}', response_model=NormalResponse, status_code=status.HTTP_200_OK)
+async def del_user(success: bool = Depends(delete_user_dep)) -> NormalResponse:
+    """删除用户
+    """
+    return NormalResponse()
+
+
 @router.get("/", response_model=UsersListResponse, status_code=200)
-async def get_users(admin: CurrUser = Depends(admin_user)):
+async def get_users(admin: CurrUser = Depends(admin_user)) -> UsersListResponse:
     """获取用户列表"""
     users = await UserOperator.list()
     return UsersListResponse(data=users)
