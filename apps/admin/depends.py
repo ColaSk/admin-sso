@@ -18,7 +18,7 @@ from apps.exceptions.exceptions import Forbidden, NotFound
 from fastapi import Depends, Path
 from fastapi.security import OAuth2PasswordRequestForm
 
-from .schemas import UserCreate
+from .schemas import UserCreate, UserUpdate
 
 
 async def login(
@@ -50,3 +50,29 @@ async def delete_user_dep(
     else:
         raise Forbidden(detail="No operation permission")
     return True
+
+
+async def update_user_dep(
+    body: UserUpdate,
+    id: int = Path(...),
+    curr_user: CurrUser = Depends(curr_user)
+) -> User:
+    
+    body_ = {}
+    for k, v in body.dict().items():
+        if v:
+            body_.update({k:v})
+    
+    if curr_user.id == id:
+        await curr_user.update_from_dict(body_).save()
+        user_ = curr_user.model_obj
+    elif curr_user.is_admin:
+        user = await User.get_or_none(id=id, is_del=False)
+        if user:
+            await user.update_from_dict(body_).save()
+            user_ = user
+        else:
+            raise NotFound(detail=f"user: {id} not existent")
+    else:
+        raise Forbidden(detail="No operation permission")
+    return user_

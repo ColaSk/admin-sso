@@ -10,14 +10,13 @@
 """
 
 # here put the import lib
-from typing import Tuple, Union, Any
+from typing import Any
 
 from apps.exceptions.exceptions import NotFound, Forbidden
 from apps.extensions.tokens import create_token, verify_token
 from apps.models.models import User
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
-from functools import lru_cache
 
 oauth2_scheme = OAuth2PasswordBearer("/api/v2/users/login")
 

@@ -47,3 +47,9 @@ class CreateResponse(BaseResponse):
 class UserInfoReResponse(BaseResponse):
 
     data: User
+
+
+class UserUpdate(BaseModel):
+
+    name: str = None
+    email: str = None

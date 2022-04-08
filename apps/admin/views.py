@@ -1,7 +1,7 @@
 import os
 from apps.exceptions.status import status
 
-from apps.extensions.response import NormalResponse, SuccessResponse
+from apps.extensions.response import NormalResponse
 from apps.extensions.route import LoggingRoute
 from apps.models.models import User
 from apps.modules.user import CurrUser, admin_user
@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends
 from init.init import init as datainit
 from tortoise.transactions import atomic
 
-from .depends import create_user, delete_user_dep
+from .depends import create_user, delete_user_dep, update_user_dep
 from .depends import login as login_depend
 from .schemas import (CreateResponse, LoginResponse,
                       UserInfoReResponse, UsersListResponse)
@@ -64,6 +64,11 @@ async def del_user(success: bool = Depends(delete_user_dep)) -> NormalResponse:
     """删除用户
     """
     return NormalResponse()
+
+
+@router.post('/{id}', response_model=UserInfoReResponse, status_code=status.HTTP_200_OK)
+async def update_user(user_: User = Depends(update_user_dep)):
+    return UserInfoReResponse(data=user_)
 
 
 @router.get("/", response_model=UsersListResponse, status_code=200)
