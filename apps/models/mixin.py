@@ -1,4 +1,3 @@
-# from apps.exceptions import NotFound
 from tortoise.models import Model
 from tortoise import fields
 from typing import Union

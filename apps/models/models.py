@@ -1,6 +1,4 @@
-from tortoise.models import Model
 from tortoise import fields
-from passlib.context import CryptContext
 from typing import Any
 from .mixin import ModelBase, DelModelBase, TimeModelBase, ModelMixin
 from apps.utils.passlib_context import hash, verify
