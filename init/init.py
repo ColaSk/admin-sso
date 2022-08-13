@@ -13,7 +13,7 @@
 import json
 import os
 from typing import List
-from apps.models.models import User, Role, Permission
+from apps.models.models import User, Role, MenuPermission as Permission
 from config.setting import BASE_DIR
 from apps.utils.utils import read_json
 

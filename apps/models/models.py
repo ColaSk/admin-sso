@@ -1,6 +1,6 @@
 from tortoise import fields
 from typing import Any
-from .mixin import ModelBase, DelModelBase, TimeModelBase, ModelMixin
+from .mixin import ModelBase, DelModelBase, TimeModelBase, AdjTreeModelBase, ModelMixin
 from apps.utils.passlib_context import hash, verify
 
 
@@ -19,7 +19,7 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
         "models.Role",
         related_name="users",
         through="user_role",
-        n_delete=fields.SET_NULL,
+        on_delete=fields.SET_NULL
     )
 
     def __init__(self, **kwargs: Any) -> None:
@@ -46,11 +46,11 @@ class Role(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
 
     name = fields.CharField(max_length=255, null=False, description="name")
     desc = fields.TextField(description="desc")
-    permissions = fields.ManyToManyField(
-        "models.Permission",
+    menu_permissions = fields.ManyToManyField(
+        "models.MenuPermission",
         related_name="roles",
         through="role_permission",
-        on_delete=fields.SET_NULL,
+        on_delete=fields.SET_NULL
     )
 
     class Meta:
@@ -58,11 +58,15 @@ class Role(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
         table_description = "角色表"
 
 
-class Permission(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
+class MenuPermission(ModelBase, 
+                     DelModelBase, 
+                     TimeModelBase,
+                     AdjTreeModelBase,
+                     ModelMixin):
 
     name = fields.CharField(max_length=255, null=False, description="name")
     desc = fields.TextField(description="desc")
 
     class Meta:
-        table = "permission"
-        table_description = "权限表"
+        table = "menu_permission"
+        table_description = "菜单权限表"

@@ -20,7 +20,7 @@ class DelModelBase(Model):
 
     class Meta:
         abstract = True
-        table_description = "base model"
+        table_description = "isdeleted base model"
 
 
 class TimeModelBase(Model):
@@ -38,7 +38,19 @@ class TimeModelBase(Model):
 
     class Meta:
         abstract = True
-        table_description = "base model"
+        table_description = "time base model"
+
+
+class AdjTreeModelBase(Model):
+    """临街表存储树结构
+    """
+
+    node_id = fields.CharField(255, null=False, description="树节点id")
+    parent_node_id = fields.CharField(255, description="树的父节点id")
+
+    class Meta:
+        abstract = True
+        table_description = "adj tree base model"
 
 
 class ModelMixin(object):
