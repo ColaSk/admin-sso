@@ -42,6 +42,17 @@ class User(ModelBase,
         return verify(password, self.password)
 
 
+
+class UserAndRole(ModelBase, Many2ManyModelBase, ModelMixin):
+
+    user_id = fields.IntField(index=True,null=False, description="用户id")
+    role_id = fields.IntField(index=True,null=False, description="角色id")
+
+    class Meta:
+        table = "user_and_role"
+        table_description = "用户角色中间表"
+
+
 class Role(ModelBase, 
            DelModelBase, 
            TimeModelBase,
@@ -54,6 +65,18 @@ class Role(ModelBase,
     class Meta:
         table = "roles"
         table_description = "角色表"
+
+
+
+class RoleAndMenuPermission(ModelBase, Many2ManyModelBase, ModelMixin):
+    
+    role_id = fields.IntField(index=True,null=False, description="角色id")
+    menu_id = fields.IntField(index=True,null=False, description="菜单id")
+
+    class Meta:
+        table = "role_and_menu"
+        table_description = "角色与菜单权限中间表"
+
 
 
 class MenuPermission(ModelBase, 
@@ -78,6 +101,7 @@ class APIPermission(ModelBase,
                     ModelMixin):
 
     name = fields.CharField(max_length=255, null=False, description="name")
+    menu_id = fields.IntField(null=False, description="菜单id")
     method = fields.CharField(max_length=20, null=False, description="方法")
     route = fields.CharField(max_length=255, null=False, description="路由")
     description = fields.TextField(description="desc")
