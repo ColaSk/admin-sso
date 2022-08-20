@@ -42,7 +42,6 @@ class User(ModelBase,
         return verify(password, self.password)
 
 
-
 class UserAndRole(ModelBase, Many2ManyModelBase, ModelMixin):
 
     user_id = fields.IntField(index=True,null=False, description="用户id")
@@ -67,7 +66,6 @@ class Role(ModelBase,
         table_description = "角色表"
 
 
-
 class RoleAndMenuPermission(ModelBase, Many2ManyModelBase, ModelMixin):
     
     role_id = fields.IntField(index=True,null=False, description="角色id")
@@ -76,7 +74,6 @@ class RoleAndMenuPermission(ModelBase, Many2ManyModelBase, ModelMixin):
     class Meta:
         table = "role_and_menu"
         table_description = "角色与菜单权限中间表"
-
 
 
 class MenuPermission(ModelBase, 
