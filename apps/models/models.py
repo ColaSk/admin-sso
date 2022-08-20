@@ -1,10 +1,16 @@
 from tortoise import fields
 from typing import Any
-from .mixin import ModelBase, DelModelBase, TimeModelBase, AdjTreeModelBase, ModelMixin
+from .mixin import (ModelBase, DelModelBase, TimeModelBase, 
+                    AdjTreeModelBase, ExtraInfoModelBase, 
+                    Many2ManyModelBase, ModelMixin)
 from apps.utils.passlib_context import hash, verify
 
 
-class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
+class User(ModelBase, 
+           DelModelBase, 
+           TimeModelBase,
+           ExtraInfoModelBase,
+           ModelMixin):
 
     name = fields.CharField(max_length=255, null=False, description="name")
     pwd = fields.CharField(max_length=255, null=False, description="password hash")
@@ -15,12 +21,6 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
         default=False, description="Background administrator, only for background module")
         
     email = fields.CharField(max_length=255, description="email")
-    roles = fields.ManyToManyField(
-        "models.Role",
-        related_name="users",
-        through="user_role",
-        on_delete=fields.SET_NULL
-    )
 
     def __init__(self, **kwargs: Any) -> None:
         kwargs["pwd"] = hash(kwargs["pwd"])  # 将 password 转为 hash
@@ -42,16 +42,14 @@ class User(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
         return verify(password, self.password)
 
 
-class Role(ModelBase, DelModelBase, TimeModelBase, ModelMixin):
+class Role(ModelBase, 
+           DelModelBase, 
+           TimeModelBase,
+           ExtraInfoModelBase, 
+           ModelMixin):
 
     name = fields.CharField(max_length=255, null=False, description="name")
-    desc = fields.TextField(description="desc")
-    menu_permissions = fields.ManyToManyField(
-        "models.MenuPermission",
-        related_name="roles",
-        through="role_permission",
-        on_delete=fields.SET_NULL
-    )
+    description = fields.TextField(description="desc")
 
     class Meta:
         table = "roles"
@@ -62,11 +60,28 @@ class MenuPermission(ModelBase,
                      DelModelBase, 
                      TimeModelBase,
                      AdjTreeModelBase,
+                     ExtraInfoModelBase,
                      ModelMixin):
 
     name = fields.CharField(max_length=255, null=False, description="name")
-    desc = fields.TextField(description="desc")
+    description = fields.TextField(description="desc")
 
     class Meta:
         table = "menu_permission"
         table_description = "菜单权限表"
+
+
+class APIPermission(ModelBase, 
+                    DelModelBase, 
+                    TimeModelBase,
+                    ExtraInfoModelBase,
+                    ModelMixin):
+
+    name = fields.CharField(max_length=255, null=False, description="name")
+    method = fields.CharField(max_length=20, null=False, description="方法")
+    route = fields.CharField(max_length=255, null=False, description="路由")
+    description = fields.TextField(description="desc")
+
+    class Meta:
+        table = "api_permission"
+        table_description = "api权限"

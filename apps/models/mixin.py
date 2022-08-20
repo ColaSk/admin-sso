@@ -53,6 +53,25 @@ class AdjTreeModelBase(Model):
         table_description = "adj tree base model"
 
 
+class ExtraInfoModelBase(Model):
+    """扩展信息"""
+
+    extra_info = fields.JSONField(description="扩展信息")
+
+    class Meta:
+        abstract = True
+        table_description = "extra info base model"
+
+
+class Many2ManyModelBase(Model):
+    """多对多基础表"""
+    
+    class Meta:
+        abstract = True
+        table_description = "extra info base model"
+
+
+
 class ModelMixin(object):
     def to_dict(self, selects: tuple = None, excludes: tuple = None):
 

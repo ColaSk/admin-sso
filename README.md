@@ -19,12 +19,12 @@
 - 数据库部署
 
 ```shell
+aerich init -t config.ORM_LINK_CONF
 aerich init-db # 初始化
 aerich migrate --name drop_column # 更新迁移
 aerich upgrade # 升级迁移到数据库数据库 
 
 ```
-
 
 ## libs (库)
 
