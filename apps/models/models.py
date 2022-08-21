@@ -12,10 +12,9 @@ class User(ModelBase,
            ExtraInfoModelBase,
            ModelMixin):
 
-    name = fields.CharField(max_length=255, null=False, description="name")
-    pwd = fields.CharField(max_length=255, null=False, description="password hash")
-    phone = fields.CharField(
-        max_length=255, null=False, unique=True, description="phone")
+    name = fields.CharField(max_length=255, description="name")
+    pwd = fields.CharField(max_length=255, description="password hash")
+    phone = fields.CharField(max_length=255, unique=True, description="phone")
 
     is_admin = fields.BooleanField(
         default=False, description="Background administrator, only for background module")
@@ -44,8 +43,8 @@ class User(ModelBase,
 
 class UserAndRole(ModelBase, Many2ManyModelBase, ModelMixin):
 
-    user_id = fields.IntField(index=True,null=False, description="用户id")
-    role_id = fields.IntField(index=True,null=False, description="角色id")
+    user_id = fields.IntField(index=True, description="用户id")
+    role_id = fields.IntField(index=True, description="角色id")
 
     class Meta:
         table = "user_and_role"
@@ -58,7 +57,7 @@ class Role(ModelBase,
            ExtraInfoModelBase, 
            ModelMixin):
 
-    name = fields.CharField(max_length=255, null=False, description="name")
+    name = fields.CharField(max_length=255, description="name")
     description = fields.TextField(description="desc")
 
     class Meta:
@@ -68,8 +67,8 @@ class Role(ModelBase,
 
 class RoleAndMenuPermission(ModelBase, Many2ManyModelBase, ModelMixin):
     
-    role_id = fields.IntField(index=True,null=False, description="角色id")
-    menu_id = fields.IntField(index=True,null=False, description="菜单id")
+    role_id = fields.IntField(index=True, description="角色id")
+    menu_id = fields.IntField(index=True, description="菜单id")
 
     class Meta:
         table = "role_and_menu"
@@ -83,7 +82,7 @@ class MenuPermission(ModelBase,
                      ExtraInfoModelBase,
                      ModelMixin):
 
-    name = fields.CharField(max_length=255, null=False, description="name")
+    name = fields.CharField(max_length=255, description="name")
     description = fields.TextField(description="desc")
 
     class Meta:
@@ -97,10 +96,10 @@ class APIPermission(ModelBase,
                     ExtraInfoModelBase,
                     ModelMixin):
 
-    name = fields.CharField(max_length=255, null=False, description="name")
-    menu_id = fields.IntField(null=False, description="菜单id")
-    method = fields.CharField(max_length=20, null=False, description="方法")
-    route = fields.CharField(max_length=255, null=False, description="路由")
+    name = fields.CharField(max_length=255, description="name")
+    menu_id = fields.IntField(description="菜单id")
+    method = fields.CharField(max_length=20, description="方法")
+    route = fields.CharField(max_length=255, description="路由")
     description = fields.TextField(description="desc")
 
     class Meta:

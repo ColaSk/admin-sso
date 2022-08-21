@@ -16,7 +16,7 @@ class ModelBase(Model):
 
 class DelModelBase(Model):
 
-    is_del = fields.BooleanField(null=False, default=False, description="逻辑删除")
+    is_del = fields.BooleanField(default=False, description="逻辑删除")
 
     class Meta:
         abstract = True
@@ -25,8 +25,8 @@ class DelModelBase(Model):
 
 class TimeModelBase(Model):
 
-    created = fields.DatetimeField(auto_now_add=True, null=False, description="创建时间")
-    updated = fields.DatetimeField(auto_now=True, null=False, description="更新时间")
+    created = fields.DatetimeField(auto_now_add=True, description="创建时间")
+    updated = fields.DatetimeField(auto_now=True, description="更新时间")
 
     @property
     def created_time(self):
@@ -45,8 +45,8 @@ class AdjTreeModelBase(Model):
     """临街表存储树结构
     """
 
-    node_id = fields.CharField(255, null=False, description="树节点id")
-    parent_node_id = fields.CharField(255, description="树的父节点id")
+    node_id = fields.CharField(255, description="树节点id")
+    parent_node_id = fields.CharField(255, null=True, description="树的父节点id")
 
     class Meta:
         abstract = True
@@ -56,7 +56,7 @@ class AdjTreeModelBase(Model):
 class ExtraInfoModelBase(Model):
     """扩展信息"""
 
-    extra_info = fields.JSONField(description="扩展信息")
+    extra_info = fields.JSONField(null=True, description="扩展信息")
 
     class Meta:
         abstract = True

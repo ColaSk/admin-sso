@@ -26,6 +26,12 @@ aerich upgrade # 升级迁移到数据库数据库
 
 ```
 
+- 启动
+
+```shell
+uvicorn apps.application:app
+```
+
 ## libs (库)
 
 fastapi
